@@ -189,6 +189,7 @@
             this.Controls.Add(this.lblTitle);
             this.Name = "Form1";
             this.Text = "Najnin\'s Diet Tracker";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.grpGoal.ResumeLayout(false);
             this.grpGoal.PerformLayout();
             this.ResumeLayout(false);

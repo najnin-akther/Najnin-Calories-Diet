@@ -14,40 +14,65 @@ namespace Najnin_Calories_Diet
     public partial class Form1 : Form
     {
         string logFile = "DietLog.txt";
+        string configFile = "config.txt";
+        //ICA-7
+        double maintainCalories;
+        double mildCalories;
+        double regularCalories;
         public Form1()
         {
             InitializeComponent();
+
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadConfig();
+        }
+
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
 
 
-            double calories = Convert.ToDouble(txtCalories.Text);
-            double caloriesPerDay = 0;
+            double calories;
+            bool foodGood, caloriesGood;
+
+            foodGood = txtFoodName.Text != "";
+            caloriesGood = double.TryParse(txtCalories.Text, out calories);
+            if (foodGood && caloriesGood)
+            {
+
+                double caloriesPerDay = 0;
 
             bool isMaintain = rdoMaintain.Checked;
             bool isMild = rdoMildLoss.Checked;
             bool isRegular = rdoRegularLoss.Checked;
+                if (!isMaintain && !isMild && !isRegular)
+                {
+                    lstOut.Items.Clear();
+                    lstOut.Items.Add("Error: Please select a goal.");
+                    return;
+                }
 
-            
 
-            string goal = "";
+
+                string goal = "";
 
             if (isMaintain)
             {
                 goal = "Maintain Weight";
-                caloriesPerDay = 2500;
+                caloriesPerDay = maintainCalories;
             }
             else if (isMild)
             {
                 goal = "Mild Weight Loss";
-                caloriesPerDay = 2000;
+                caloriesPerDay = mildCalories;
             }
             else if (isRegular)
             {
                 goal = "Regular Weight Loss";
-                caloriesPerDay = 1500;
+                caloriesPerDay = regularCalories;
             }
 
             double percent = calories / caloriesPerDay;
@@ -62,6 +87,22 @@ namespace Najnin_Calories_Diet
 
 
             SaveToFile();
+            }
+            else
+            {
+                lstOut.Items.Clear();
+
+                if (!foodGood)
+                {
+                    lstOut.Items.Add("Error: Please enter food name.");
+                }
+
+                if (!caloriesGood)
+                {
+                    lstOut.Items.Add("Error: Please enter valid calories.");
+                }
+            }
+
 
 
 
@@ -115,5 +156,75 @@ namespace Najnin_Calories_Diet
             sw.WriteLine();
             sw.Close();
         }
+
+        private void LoadConfig()
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Text Files (*.txt)|*.txt";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    configFile = ofd.FileName;
+                }
+                else
+                {
+                    MessageBox.Show("No file selected");
+                    return;
+                }
+
+                StreamReader sr;
+                sr = File.OpenText(configFile);
+
+                string line;
+                int count = 0;
+
+                do
+                {
+                    line = sr.ReadLine();
+
+                    if (line != null)
+                    {
+                        if (count == 0)
+                            maintainCalories = Convert.ToDouble(line);
+                        else if (count == 1)
+                            mildCalories = Convert.ToDouble(line);
+                        else if (count == 2)
+                            regularCalories = Convert.ToDouble(line);
+
+                        count++;
+                    }
+
+                } while (line != null);
+
+                sr.Close();
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Config file not found!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
-}
+  
+    
+    
+
+    
+               
+                            
+                        
+                            
+
+                        
+                    }
+
+               
+ 
+
+
+    
