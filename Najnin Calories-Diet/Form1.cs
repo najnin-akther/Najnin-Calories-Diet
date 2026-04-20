@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Najnin_Calories_Diet
 {
@@ -15,108 +9,146 @@ namespace Najnin_Calories_Diet
     {
         string logFile = "DietLog.txt";
         string configFile = "config.txt";
-        //ICA-7
+
         double maintainCalories;
         double mildCalories;
         double regularCalories;
+
+        const int MAINTAIN = 1;
+        const int MILD = 2;
+        const int REGULAR = 3;
+
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadConfig();
-        }
+            rdoMaintain.Checked = true;
 
+            StreamReader sr;
+            bool fileGood = true;
+
+            do
+            {
+                try
+                {
+                    sr = File.OpenText(configFile);
+                    fileGood = true;
+
+                    string line;
+                    int count = 0;
+
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        double value;
+
+                        if (double.TryParse(line, out value))
+                        {
+                            if (count == 0) maintainCalories = value;
+                            else if (count == 1) mildCalories = value;
+                            else if (count == 2) regularCalories = value;
+
+                            count++;
+                        }
+                    }
+
+                    sr.Close();
+                }
+                catch (FileNotFoundException fnf)
+                {
+                    fileGood = false;
+
+                    MessageBox.Show(fnf.Message + "\n\nPlease select the configuration file");
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Filter = "Text Files|*.txt|All Files|*.*";
+                    ofd.ShowDialog();
+
+                    configFile = ofd.FileName;
+                }
+
+            } while (!fileGood);
+        }
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
-
-
             double calories;
-            bool foodGood, caloriesGood;
-
-            foodGood = txtFoodName.Text != "";
-            caloriesGood = double.TryParse(txtCalories.Text, out calories);
-            if (foodGood && caloriesGood)
-            {
-
-                double caloriesPerDay = 0;
-
-            bool isMaintain = rdoMaintain.Checked;
-            bool isMild = rdoMildLoss.Checked;
-            bool isRegular = rdoRegularLoss.Checked;
-                if (!isMaintain && !isMild && !isRegular)
-                {
-                    lstOut.Items.Clear();
-                    lstOut.Items.Add("Error: Please select a goal.");
-                    return;
-                }
-
-
-
-                string goal = "";
-
-            if (isMaintain)
-            {
-                goal = "Maintain Weight";
-                caloriesPerDay = maintainCalories;
-            }
-            else if (isMild)
-            {
-                goal = "Mild Weight Loss";
-                caloriesPerDay = mildCalories;
-            }
-            else if (isRegular)
-            {
-                goal = "Regular Weight Loss";
-                caloriesPerDay = regularCalories;
-            }
-
-            double percent = calories / caloriesPerDay;
+            bool foodGood = txtFoodName.Text != "";
+            bool caloriesGood = double.TryParse(txtCalories.Text, out calories);
 
             lstOut.Items.Clear();
 
-            lstOut.Items.Add("Food: " + txtFoodName.Text);
-            lstOut.Items.Add("Calories: " + calories);
-            lstOut.Items.Add("Goal: " + goal);
-            lstOut.Items.Add("Daily Limit: " + caloriesPerDay);
-            lstOut.Items.Add("Percentage: " + percent.ToString("P2"));
+            if (foodGood && caloriesGood)
+            {
+                int choice = 0;
+                string goal = "";
+                double caloriesPerDay = 0;
 
+                if (rdoMaintain.Checked)
+                    choice = MAINTAIN;
+                else if (rdoMildLoss.Checked)
+                    choice = MILD;
+                else if (rdoRegularLoss.Checked)
+                    choice = REGULAR;
 
-            SaveToFile();
+                switch (choice)
+                {
+                    case MAINTAIN:
+                        goal = "Maintain Weight";
+                        caloriesPerDay = maintainCalories;
+                        break;
+
+                    case MILD:
+                        goal = "Mild Weight Loss";
+                        caloriesPerDay = mildCalories;
+                        break;
+
+                    case REGULAR:
+                        goal = "Regular Weight Loss";
+                        caloriesPerDay = regularCalories;
+                        break;
+
+                    default:
+                        lstOut.Items.Add("Please select a goal");
+                        return;
+                }
+
+                double percent = calories / caloriesPerDay;
+
+                lstOut.Items.Add("Food Name: " + txtFoodName.Text);
+                lstOut.Items.Add("Calories for food item: " + calories.ToString("N0"));
+                lstOut.Items.Add("Daily Calories Allowed: " + caloriesPerDay.ToString("N0"));
+                lstOut.Items.Add("Percentage of Daily Calories: " + percent.ToString("P2"));
+                lstOut.Items.Add("Goal: " + goal);
+
+                StreamWriter sw;
+                sw = File.AppendText(logFile);
+
+                sw.WriteLine("************* Beginning of transaction at " +
+                    DateTime.Now.ToString("G") + " *************");
+
+                sw.WriteLine("Food Name: " + txtFoodName.Text);
+                sw.WriteLine("Calories: " + calories.ToString("N0"));
+                sw.WriteLine("Goal: " + goal);
+                sw.WriteLine("Daily Limit: " + caloriesPerDay.ToString("N0"));
+                sw.WriteLine("Percentage: " + percent.ToString("P2"));
+
+                sw.Close();
             }
             else
             {
-                lstOut.Items.Clear();
-
                 if (!foodGood)
-                {
-                    lstOut.Items.Add("Error: Please enter food name.");
-                }
+                    lstOut.Items.Add("Please enter food name");
 
                 if (!caloriesGood)
-                {
-                    lstOut.Items.Add("Error: Please enter valid calories.");
-                }
+                    lstOut.Items.Add("please enter a valid number");
             }
-
-
-
-
-
-
-
-
-
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-
-
             txtFoodName.Clear();
             txtCalories.Clear();
             lstOut.Items.Clear();
@@ -125,7 +157,7 @@ namespace Najnin_Calories_Diet
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
 
         private void txtFoodName_Enter(object sender, EventArgs e)
@@ -137,94 +169,5 @@ namespace Najnin_Calories_Diet
         {
             txtFoodName.BackColor = SystemColors.Window;
         }
-
-
-
-        //ICA-6
-        private void SaveToFile()
-        {
-            StreamWriter sw = File.AppendText(logFile);
-
-            sw.WriteLine("----- New Transaction -----");
-            sw.WriteLine("Date: " + DateTime.Now);
-
-            foreach (var item in lstOut.Items)
-            {
-                sw.WriteLine(item.ToString());
-            }
-
-            sw.WriteLine();
-            sw.Close();
-        }
-
-        private void LoadConfig()
-        {
-            try
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Filter = "Text Files (*.txt)|*.txt";
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    configFile = ofd.FileName;
-                }
-                else
-                {
-                    MessageBox.Show("No file selected");
-                    return;
-                }
-
-                StreamReader sr;
-                sr = File.OpenText(configFile);
-
-                string line;
-                int count = 0;
-
-                do
-                {
-                    line = sr.ReadLine();
-
-                    if (line != null)
-                    {
-                        if (count == 0)
-                            maintainCalories = Convert.ToDouble(line);
-                        else if (count == 1)
-                            mildCalories = Convert.ToDouble(line);
-                        else if (count == 2)
-                            regularCalories = Convert.ToDouble(line);
-
-                        count++;
-                    }
-
-                } while (line != null);
-
-                sr.Close();
-            }
-            catch (FileNotFoundException)
-            {
-                MessageBox.Show("Config file not found!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
     }
-  
-    
-    
-
-    
-               
-                            
-                        
-                            
-
-                        
-                    }
-
-               
- 
-
-
-    
+}
