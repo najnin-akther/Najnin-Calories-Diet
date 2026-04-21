@@ -10,10 +10,29 @@ namespace Najnin_Calories_Diet
         string logFile = "DietLog.txt";
         string configFile = "config.txt";
 
-        double maintainCalories;
-        double mildCalories;
-        double regularCalories;
+        private double maintainCalories;
+        private double mildCalories;
+        private double regularCalories;
 
+        //ICA-8 adding properties
+
+        public double MaintainCalories
+        {
+            get { return maintainCalories; }
+            set { maintainCalories = value; }
+        }
+
+        public double MildCalories
+        {
+            get { return mildCalories; }
+            set { mildCalories = value; }
+        }
+
+        public double RegularCalories
+        {
+            get { return regularCalories; }
+            set { regularCalories = value; }
+        }
         const int MAINTAIN = 1;
         const int MILD = 2;
         const int REGULAR = 3;
