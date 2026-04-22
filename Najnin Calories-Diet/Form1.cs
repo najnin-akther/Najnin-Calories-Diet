@@ -14,8 +14,7 @@ namespace Najnin_Calories_Diet
         private double mildCalories;
         private double regularCalories;
 
-        //ICA-8 adding properties
-
+        //ICA=8
         public double MaintainCalories
         {
             get { return maintainCalories; }
@@ -33,6 +32,7 @@ namespace Najnin_Calories_Diet
             get { return regularCalories; }
             set { regularCalories = value; }
         }
+
         const int MAINTAIN = 1;
         const int MILD = 2;
         const int REGULAR = 3;
@@ -65,9 +65,10 @@ namespace Najnin_Calories_Diet
 
                         if (double.TryParse(line, out value))
                         {
-                            if (count == 0) maintainCalories = value;
-                            else if (count == 1) mildCalories = value;
-                            else if (count == 2) regularCalories = value;
+                            
+                            if (count == 0) MaintainCalories = value;
+                            else if (count == 1) MildCalories = value;
+                            else if (count == 2) RegularCalories = value;
 
                             count++;
                         }
@@ -116,17 +117,17 @@ namespace Najnin_Calories_Diet
                 {
                     case MAINTAIN:
                         goal = "Maintain Weight";
-                        caloriesPerDay = maintainCalories;
+                        caloriesPerDay = MaintainCalories; 
                         break;
 
                     case MILD:
                         goal = "Mild Weight Loss";
-                        caloriesPerDay = mildCalories;
+                        caloriesPerDay = MildCalories;
                         break;
 
                     case REGULAR:
                         goal = "Regular Weight Loss";
-                        caloriesPerDay = regularCalories;
+                        caloriesPerDay = RegularCalories; 
                         break;
 
                     default:
