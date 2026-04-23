@@ -177,7 +177,16 @@ namespace Najnin_Calories_Diet
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult buttonSelected;
+            buttonSelected = MessageBox.Show("Do you really want to quit?",
+                                              "Exiting...",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Question);
+            if (buttonSelected == DialogResult.Yes)
+            {
+                //ICA 2
+                this.Close();
+            }
         }
 
         private void txtFoodName_Enter(object sender, EventArgs e)
