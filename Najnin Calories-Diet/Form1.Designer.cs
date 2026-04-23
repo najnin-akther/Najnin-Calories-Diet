@@ -44,7 +44,7 @@
             this.btnCalculate = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.grpGoal.SuspendLayout();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -59,19 +59,16 @@
             // 
             // grpGoal
             // 
-            this.grpGoal.Controls.Add(this.rdoMaintain);
-            this.grpGoal.Controls.Add(this.rdoMildLoss);
-            this.grpGoal.Controls.Add(this.rdoRegularLoss);
-            this.grpGoal.Location = new System.Drawing.Point(20, 30);
+            this.grpGoal.Location = new System.Drawing.Point(40, 81);
             this.grpGoal.Name = "grpGoal";
-            this.grpGoal.Size = new System.Drawing.Size(350, 70);
+            this.grpGoal.Size = new System.Drawing.Size(359, 71);
             this.grpGoal.TabIndex = 1;
             this.grpGoal.TabStop = false;
             this.grpGoal.Text = "Select Goal";
             // 
             // rdoMaintain
             // 
-            this.rdoMaintain.Location = new System.Drawing.Point(20, 30);
+            this.rdoMaintain.Location = new System.Drawing.Point(49, 106);
             this.rdoMaintain.Name = "rdoMaintain";
             this.rdoMaintain.Size = new System.Drawing.Size(104, 24);
             this.rdoMaintain.TabIndex = 0;
@@ -79,7 +76,7 @@
             // 
             // rdoMildLoss
             // 
-            this.rdoMildLoss.Location = new System.Drawing.Point(130, 30);
+            this.rdoMildLoss.Location = new System.Drawing.Point(164, 106);
             this.rdoMildLoss.Name = "rdoMildLoss";
             this.rdoMildLoss.Size = new System.Drawing.Size(104, 24);
             this.rdoMildLoss.TabIndex = 1;
@@ -87,7 +84,7 @@
             // 
             // rdoRegularLoss
             // 
-            this.rdoRegularLoss.Location = new System.Drawing.Point(240, 30);
+            this.rdoRegularLoss.Location = new System.Drawing.Point(280, 106);
             this.rdoRegularLoss.Name = "rdoRegularLoss";
             this.rdoRegularLoss.Size = new System.Drawing.Size(104, 24);
             this.rdoRegularLoss.TabIndex = 2;
@@ -95,7 +92,7 @@
             // 
             // lblFood
             // 
-            this.lblFood.Location = new System.Drawing.Point(20, 120);
+            this.lblFood.Location = new System.Drawing.Point(37, 161);
             this.lblFood.Name = "lblFood";
             this.lblFood.Size = new System.Drawing.Size(100, 23);
             this.lblFood.TabIndex = 2;
@@ -103,7 +100,7 @@
             // 
             // lblCalories
             // 
-            this.lblCalories.Location = new System.Drawing.Point(20, 150);
+            this.lblCalories.Location = new System.Drawing.Point(37, 202);
             this.lblCalories.Name = "lblCalories";
             this.lblCalories.Size = new System.Drawing.Size(100, 23);
             this.lblCalories.TabIndex = 4;
@@ -111,7 +108,7 @@
             // 
             // txtFoodName
             // 
-            this.txtFoodName.Location = new System.Drawing.Point(150, 115);
+            this.txtFoodName.Location = new System.Drawing.Point(164, 158);
             this.txtFoodName.Name = "txtFoodName";
             this.txtFoodName.Size = new System.Drawing.Size(200, 22);
             this.txtFoodName.TabIndex = 3;
@@ -120,7 +117,7 @@
             // 
             // txtCalories
             // 
-            this.txtCalories.Location = new System.Drawing.Point(150, 145);
+            this.txtCalories.Location = new System.Drawing.Point(164, 203);
             this.txtCalories.Name = "txtCalories";
             this.txtCalories.Size = new System.Drawing.Size(200, 22);
             this.txtCalories.TabIndex = 5;
@@ -128,14 +125,14 @@
             // lstOut
             // 
             this.lstOut.ItemHeight = 16;
-            this.lstOut.Location = new System.Drawing.Point(20, 190);
+            this.lstOut.Location = new System.Drawing.Point(23, 251);
             this.lstOut.Name = "lstOut";
             this.lstOut.Size = new System.Drawing.Size(330, 116);
             this.lstOut.TabIndex = 6;
             // 
             // btnCalculate
             // 
-            this.btnCalculate.Location = new System.Drawing.Point(20, 330);
+            this.btnCalculate.Location = new System.Drawing.Point(23, 386);
             this.btnCalculate.Name = "btnCalculate";
             this.btnCalculate.Size = new System.Drawing.Size(90, 30);
             this.btnCalculate.TabIndex = 7;
@@ -144,7 +141,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(140, 330);
+            this.btnClear.Location = new System.Drawing.Point(150, 386);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(90, 30);
             this.btnClear.TabIndex = 8;
@@ -153,16 +150,30 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(260, 330);
+            this.btnExit.Location = new System.Drawing.Point(280, 386);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(90, 30);
             this.btnExit.TabIndex = 9;
             this.btnExit.Text = "E&xit";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // btnSettings
+            // 
+            this.btnSettings.Location = new System.Drawing.Point(-1, 9);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(75, 23);
+            this.btnSettings.TabIndex = 10;
+            this.btnSettings.Text = "&Settings";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(442, 449);
+            this.ClientSize = new System.Drawing.Size(572, 449);
+            this.Controls.Add(this.rdoRegularLoss);
+            this.Controls.Add(this.rdoMildLoss);
+            this.Controls.Add(this.rdoMaintain);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.grpGoal);
             this.Controls.Add(this.lblFood);
@@ -176,10 +187,11 @@
             this.Name = "Form1";
             this.Text = "Najnin\'s Diet Tracker";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.grpGoal.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
+
+        private System.Windows.Forms.Button btnSettings;
     }
 }
