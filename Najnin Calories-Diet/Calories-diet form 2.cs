@@ -17,12 +17,9 @@ namespace Najnin_Calories_Diet
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            // show current values
-            txtMaintain.Text = mainForm.MaintainCalories.ToString();
-            txtMild.Text = mainForm.MildCalories.ToString();
-            txtRegular.Text = mainForm.RegularCalories.ToString();
-
+           
             lblError.Visible = false;
+        
         }
 
         private void btnReturn_Click(object sender, EventArgs e)
@@ -49,7 +46,8 @@ namespace Najnin_Calories_Diet
                 sw.WriteLine(regular);
                 sw.Close();
 
-                this.Close();
+                this.Hide();
+                
             }
             else
             {

@@ -7,6 +7,7 @@ namespace Najnin_Calories_Diet
 {
     public partial class Form1 : Form
     {
+        Form2 f2;
         string logFile = "DietLog.txt";
         string configFile = "config.txt";
 
@@ -40,6 +41,7 @@ namespace Najnin_Calories_Diet
         public Form1()
         {
             InitializeComponent();
+            f2 = new Form2(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -199,10 +201,82 @@ namespace Najnin_Calories_Diet
             txtFoodName.BackColor = SystemColors.Window;
         }
         //ica-9
+        internal void setSettings()
+        {
+            f2.txtMaintain.Text = MaintainCalories.ToString();
+            f2.txtMild.Text = MildCalories.ToString();
+            f2.txtRegular.Text = RegularCalories.ToString();
+        }
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(this);
+            setSettings();
             f2.ShowDialog();
+        }
+
+       
+        //ica-10 loop
+        private void printLogFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] DietLogEntries;
+            const int MAX_ENTRIES = 2000;
+
+            DietLogEntries = new string[MAX_ENTRIES];
+
+            StreamReader sr = File.OpenText(logFile);
+
+            int numEntries = 0;
+
+            while (!sr.EndOfStream)
+            {
+                DietLogEntries[numEntries] = sr.ReadLine();
+                numEntries++;
+            }
+
+            sr.Close();
+            string goalText = "";
+            if (rdoMaintain.Checked)
+            {
+                goalText = "Goal: Maintain Weight";
+            }
+            else if (rdoMildLoss.Checked)
+            {
+                goalText = "Goal: Mild Weight Loss";
+            }
+            else if (rdoRegularLoss.Checked)
+            {
+                goalText = "Goal: Regular Weight Loss";
+            }
+
+            lstOut.Items.Clear();
+
+            for (int i = 0; i < numEntries; i++)
+            {
+                if (DietLogEntries[i] == goalText)
+                {
+                    for (int j = i - 3; j <= i + 2; j++)
+                    {
+                        if (j >= 0 && j < numEntries)
+                        {
+                            lstOut.Items.Add(DietLogEntries[j]);
+                        }
+                    }
+                }
+            }
+        }
+        //ICA-10 exit button add
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult buttonSelected;
+
+            buttonSelected = MessageBox.Show("Do you really want to quit?",
+                                              "Exiting...",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Question);
+
+            if (buttonSelected == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
 }
