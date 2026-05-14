@@ -67,7 +67,7 @@ namespace Najnin_Calories_Diet
 
                         if (double.TryParse(line, out value))
                         {
-                            
+
                             if (count == 0) MaintainCalories = value;
                             else if (count == 1) MildCalories = value;
                             else if (count == 2) RegularCalories = value;
@@ -83,12 +83,13 @@ namespace Najnin_Calories_Diet
                     fileGood = false;
 
                     MessageBox.Show(fnf.Message + "\n\nPlease select the configuration file");
+                    openFileDialog1.Filter = "Text Files|*.txt|All Files|*.*";
 
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    ofd.Filter = "Text Files|*.txt|All Files|*.*";
-                    ofd.ShowDialog();
+                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        configFile = openFileDialog1.FileName;
+                    }
 
-                    configFile = ofd.FileName;
                 }
 
             } while (!fileGood);
@@ -96,11 +97,15 @@ namespace Najnin_Calories_Diet
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
+
+            
+
+
             double calories;
             bool foodGood = txtFoodName.Text != "";
             bool caloriesGood = double.TryParse(txtCalories.Text, out calories);
 
-            lstOut.Items.Clear();
+            
 
             if (foodGood && caloriesGood)
             {
@@ -119,7 +124,7 @@ namespace Najnin_Calories_Diet
                 {
                     case MAINTAIN:
                         goal = "Maintain Weight";
-                        caloriesPerDay = MaintainCalories; 
+                        caloriesPerDay = MaintainCalories;
                         break;
 
                     case MILD:
@@ -129,44 +134,47 @@ namespace Najnin_Calories_Diet
 
                     case REGULAR:
                         goal = "Regular Weight Loss";
-                        caloriesPerDay = RegularCalories; 
+                        caloriesPerDay = RegularCalories;
                         break;
 
                     default:
-                        lstOut.Items.Add("Please select a goal");
+                    
+                        OutputMessage("ListBox", "Please select a goal");
                         return;
+                        
                 }
 
                 double percent = calories / caloriesPerDay;
 
-                lstOut.Items.Add("Food Name: " + txtFoodName.Text);
-                lstOut.Items.Add("Calories for food item: " + calories.ToString("N0"));
-                lstOut.Items.Add("Daily Calories Allowed: " + caloriesPerDay.ToString("N0"));
-                lstOut.Items.Add("Percentage of Daily Calories: " + percent.ToString("P2"));
-                lstOut.Items.Add("Goal: " + goal);
+                OutputMessage("Both", "************* Beginning of transaction at " +
+     DateTime.Now.ToString("G") + " *************");
 
-                StreamWriter sw;
-                sw = File.AppendText(logFile);
+                OutputMessage("Both", "Food Name: " + txtFoodName.Text);
 
-                sw.WriteLine("************* Beginning of transaction at " +
-                    DateTime.Now.ToString("G") + " *************");
+                OutputMessage("Both", "Calories for food item: " +
+                    calories.ToString("N0"));
 
-                sw.WriteLine("Food Name: " + txtFoodName.Text);
-                sw.WriteLine("Calories: " + calories.ToString("N0"));
-                sw.WriteLine("Goal: " + goal);
-                sw.WriteLine("Daily Limit: " + caloriesPerDay.ToString("N0"));
-                sw.WriteLine("Percentage: " + percent.ToString("P2"));
+                OutputMessage("Both", "Daily Calories Allowed: " +
+                    caloriesPerDay.ToString("N0"));
 
-                sw.Close();
+                OutputMessage("Both", "Percentage of Daily Calories: " +
+                    percent.ToString("P2"));
+
+                OutputMessage("Both", "Goal: " + goal);
+
+
             }
             else
             {
                 if (!foodGood)
-                    lstOut.Items.Add("Please enter food name");
+                    OutputMessage("ListBox", "Please enter food name");
 
                 if (!caloriesGood)
-                    lstOut.Items.Add("please enter a valid number");
+                    OutputMessage("ListBox", "please enter a valid number");
             }
+
+           
+           
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -207,13 +215,9 @@ namespace Najnin_Calories_Diet
             f2.txtMild.Text = MildCalories.ToString();
             f2.txtRegular.Text = RegularCalories.ToString();
         }
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            setSettings();
-            f2.ShowDialog();
-        }
-
        
+
+
         //ica-10 loop
         private void printLogFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -277,6 +281,28 @@ namespace Najnin_Calories_Diet
             {
                 this.Close();
             }
+        }
+
+        //ICA-11
+        public void OutputMessage(string outputType, string message)
+        {
+            if (outputType == "ListBox" || outputType == "Both")
+            {
+                lstOut.Items.Add(message);
+            }
+
+            if (outputType == "Log" || outputType == "Both")
+            {
+                StreamWriter sw = new StreamWriter("log.txt", true);
+                sw.WriteLine(message);
+                sw.Close();
+            }
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            setSettings();
+            f2.ShowDialog();
         }
     }
 }
